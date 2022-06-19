@@ -1,0 +1,411 @@
+{% load humanize %}
+
+<html>
+
+<head>
+
+    <base href="http://www.example.com/">
+    <link href="/assets/css/style.css" rel="stylesheet">
+
+</head>
+
+{% block mycss %}
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    tr td:first-child {
+        text-transform: lowercase;
+        text-align: right;
+        padding-right: 1rem;
+    }
+
+    tr td:last-child:not(:first-child) {
+        text-align: left;
+        text-transform: uppercase;
+    }
+
+    tr h3 {
+        margin-bottom: 0;
+    }
+
+    h1 {
+        text-transform: uppercase;
+        white-space: nowrap;
+        padding-top: 3rem;
+        padding-bottom: .5rem;
+        margin: 0;
+    }
+
+    footer.right {
+        position: absolute;
+        right: 0;
+        width: 100vh;
+        transform-origin: right top;
+        -webkit-transform-origin: right top;
+        transform: rotate(-90deg) translate(0, -100%);
+        -webkit-transform: rotate(-90deg) translate(0, -100%);
+    }
+
+    header.right-top {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+</style>
+{% endblock mycss %}
+
+{% block content %}
+
+<header class="right-top">
+    DATE: {{today |date:'d-m-Y'}}
+</header>
+
+<table>
+    <tbody>
+        <tr>
+            <td></td>
+            <td>
+                <h1>AREA SUMMARY</h1>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>
+                    Total Existing Lot Area
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    {{ LANDMEAS|floatformat:0|intcomma }} SF ({{GISACRES|floatformat:2}} AC)
+                </strong>
+            </td>
+        </tr>
+        <td>
+
+            <br />
+            <h3>Liveable Area Summary</h3>
+        </td>
+        <tr>
+            <td>
+                <strong>
+                    Existing Liveable Area
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    {{ SQFT |floatformat:0|intcomma}} SF
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>
+                    ADU Area
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    {{adu_area|floatformat:0|intcomma}} SF
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>
+                    Total New Liveable Area
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    {{total_new_liveable_area|floatformat:0|intcomma}} SF
+                </strong>
+            </td>
+        </tr>
+        <td>
+
+            <br />
+            <h3>Lot Coverage Summary</h3>
+        </td>
+        <tr>
+            <td>
+                <strong>
+                    Total Existing Lot Area
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    {{ LANDMEAS |floatformat:0|intcomma}} SF ({{GISACRES|floatformat:2}} AC)
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>
+                    Existing Residence
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    {{ SQFT |floatformat:0|intcomma}} SF
+                </strong>
+            </td>
+        </tr>
+        {% if POOLAREA > 0 %}
+        <tr>
+            <td>
+                <strong>
+                    Existing Pool Area
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    {{ POOLAREA |floatformat:0|intcomma}} SF
+                </strong>
+            </td>
+        </tr>
+        {% endif %}
+        <tr>
+            <td>
+                <strong>
+                    Existing Additional Build Areas
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    {{additional_built_areas|floatformat:0|intcomma}} SF
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>
+                    ADU Area
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    {{adu_area|floatformat:0|intcomma}} SF
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>
+                    Total Proposed Lot Coverage Area
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    {{total_proposed_lot_coverage_area|floatformat:0|intcomma}} SF
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <br />
+                <strong>
+                    Lot Coverage Maximum
+                </strong>
+            </td>
+            <td>
+                <br />
+                <strong>
+
+                    {{ lot_coverage_maximum |floatformat:0|intcomma}} %
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>
+                    Lot Coverage
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    {{total_proposed_lot_coverage_area|floatformat:0|intcomma}}/
+                    {{LANDMEAS|floatformat:0|intcomma}} =
+                    {{lot_coverage|floatformat:1}} % - OK
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <h1>SITE INFORMATION</h1>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>
+                    Project
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    ADU
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>
+                    Address
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    {{ADDRESS_OL}} {{JURIS_OL}}, AZ {{ZIP|floatformat:0}}
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>
+                    Property Owner
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    {{A}}
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>
+                    Parcel
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    {{PARCEL}}
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>
+                    S-T-R
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    {{TRS_OL}}
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>
+                    Legal
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    {{ LEGAL1 }} {{ LEGAL2 }} {{ LEGAL3 }} {{ LEGAL4 }} {{ LEGAL5 }}
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>
+                    Zoning
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    {{ZONING}}
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>
+                    Lot Area
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    {{LANDMEAS|floatformat:0|intcomma}} SF ({{GISACRES|floatformat:2}} AC)
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>
+                    Proposed Use
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    Single Family Residential - ADU - No Change
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>
+                    Lot Coverage
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    No Change - Max {{ lot_coverage_maximum|floatformat:0|intcomma }} %
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>
+                    Height
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    {{height}} MAX - PROPOSED ADU: {{adu_height}}' - OK
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <br />
+                <strong>
+                    Perimeter Yard
+                </strong>
+            </td>
+            <td>
+                <br />
+                <strong>
+                    {{perimeter_yard}}
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>
+                    Street Setback
+                </strong>
+            </td>
+            <td>
+                <strong>
+                    Existing - No Change
+                </strong>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<footer class="right">
+    <div>
+        <h1>
+            {{last_name}} RESIDENCE
+        </h1>
+        <h2>{{ADDRESS_OL}}</h2>
+        <h3>{{JURIS_OL}}, AZ {{ZIP|floatformat:0}}</h3>
+        <p>SITE PLAN/INFO</p>
+    </div>
+</footer>
+{% endblock %}
